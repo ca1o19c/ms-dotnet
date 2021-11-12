@@ -76,8 +76,18 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteProductById(string id)
         {
-            await _repository.DeleteProduct(id);
-            return NoContent();
+
+            var result = await _repository.DeleteProduct(id);
+
+            if (result)
+            {
+                return NoContent();
+            }
+            else
+            {
+                _logger.LogError($"Product with id: {id}, not found");
+                return NotFound();
+            }
         }
     }
 }
